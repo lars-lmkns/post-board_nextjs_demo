@@ -2,6 +2,9 @@
 import { redirect } from "next/navigation";
 import { storePost } from "@/lib/posts";
 import { uploadImage } from "@/lib/cloudinary";
+import { revalidatePath } from "next/cache";
+import { updatePostLikeStatus } from "@/lib/posts";
+
 export async function createPost(prevState, formData) {
   const title = formData.get("title");
   const image = formData.get("image");
@@ -41,4 +44,9 @@ export async function createPost(prevState, formData) {
   });
 
   redirect("/feed");
+}
+
+export async function togglePostLike(postId ) {
+  updatePostLikeStatus(postId, 2); //Hardcoded userId for now
+  revalidatePath("/", "layout");
 }
